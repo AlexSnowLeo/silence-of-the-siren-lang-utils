@@ -123,19 +123,19 @@ namespace TranslateEditor
 
             var locId = gridLang.Rows[e.RowIndex].Cells[0].Value;
 
-            var ruNode = _langDoc.DocumentElement
+            var langNode = _langDoc.DocumentElement
                 .SelectSingleNode($"//GameDBStringTable/LocalizedStrings/GameDBLocalizedString/LocID[text()='{locId}']")?
                 .ParentNode?
                 .SelectSingleNode("Text");
 
-            if (ruNode == null)
+            if (langNode == null)
                 return;
 
-            var ruValue = gridLang.Rows[e.RowIndex].Cells[2].Value as string ?? string.Empty;
+            var langValue = gridLang.Rows[e.RowIndex].Cells[2].Value as string ?? string.Empty;
             var enValue = gridLang.Rows[e.RowIndex].Cells[1].Value as string ?? string.Empty;
-            ruNode.InnerXml = ruValue;
+            langNode.InnerXml = langValue;
 
-            gridLang.Rows[e.RowIndex].Cells[2].Style.BackColor = enValue != ruValue && !string.IsNullOrEmpty(ruValue)
+            gridLang.Rows[e.RowIndex].Cells[2].Style.BackColor = enValue != langValue && !string.IsNullOrEmpty(langValue)
                 ? Color.LightGreen
                 : Color.LightCoral;
 
