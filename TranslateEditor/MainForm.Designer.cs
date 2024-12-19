@@ -34,6 +34,9 @@
             statusStrip = new StatusStrip();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
             toolStrip1 = new ToolStrip();
+            toolStripLabel2 = new ToolStripLabel();
+            cbLang = new ToolStripComboBox();
+            toolStripLabel3 = new ToolStripLabel();
             cbFiles = new ToolStripComboBox();
             toolStripLabel1 = new ToolStripLabel();
             tbSearch = new ToolStripTextBox();
@@ -63,15 +66,37 @@
             // 
             // toolStrip1
             // 
-            toolStrip1.Items.AddRange(new ToolStripItem[] { cbFiles, toolStripLabel1, tbSearch });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripLabel2, cbLang, toolStripLabel3, cbFiles, toolStripLabel1, tbSearch });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(1287, 25);
             toolStrip1.TabIndex = 1;
             toolStrip1.Text = "toolStrip1";
             // 
+            // toolStripLabel2
+            // 
+            toolStripLabel2.Name = "toolStripLabel2";
+            toolStripLabel2.Size = new Size(41, 22);
+            toolStripLabel2.Text = "LANG:";
+            // 
+            // cbLang
+            // 
+            cbLang.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbLang.FlatStyle = FlatStyle.Standard;
+            cbLang.Items.AddRange(new object[] { "DE", "HU", "IT", "RU", "UK" });
+            cbLang.Name = "cbLang";
+            cbLang.Size = new Size(75, 25);
+            cbLang.SelectedIndexChanged += cbLang_SelectedIndexChanged;
+            // 
+            // toolStripLabel3
+            // 
+            toolStripLabel3.Name = "toolStripLabel3";
+            toolStripLabel3.Size = new Size(31, 22);
+            toolStripLabel3.Text = "FILE:";
+            // 
             // cbFiles
             // 
+            cbFiles.FlatStyle = FlatStyle.System;
             cbFiles.Name = "cbFiles";
             cbFiles.Size = new Size(250, 25);
             cbFiles.SelectedIndexChanged += cbFiles_SelectedIndexChanged;
@@ -165,5 +190,8 @@
         private DataGridViewTextBoxColumn SecondLang;
         private ToolStripLabel toolStripLabel1;
         private ToolStripTextBox tbSearch;
+        private ToolStripLabel toolStripLabel2;
+        private ToolStripComboBox cbLang;
+        private ToolStripLabel toolStripLabel3;
     }
 }

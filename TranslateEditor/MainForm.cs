@@ -6,6 +6,7 @@ namespace TranslateEditor
 {
     public partial class MainForm : Form
     {
+        private string _lang;
         private readonly string _langFolder;
         private string[] _files;
 
@@ -16,6 +17,9 @@ namespace TranslateEditor
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
+
+            _lang = config.GetSection("Lang").Value ?? "RU";
+            cbLang.SelectedItem = _lang;
 
             _langFolder = config.GetSection("LangFolder").Value ?? "data";
             toolStripStatusLabel1.Text = _langFolder;
@@ -43,8 +47,8 @@ namespace TranslateEditor
 
         }
 
-        private XmlDocument _ruDoc;
-        private string _ruFileName;
+        private XmlDocument _langDoc;
+        private string _langFileName;
         private void cbFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
             var fileText = cbFiles.SelectedItem as string;
@@ -53,26 +57,28 @@ namespace TranslateEditor
 
             var fileName = Path.Combine(_langFolder, "localization-base-english", fileText);
 
-            _ruFileName = Path.Combine(_langFolder, "localization-pack-ru", fileText.Replace("StringTableEn", "StringTableRu"));
+            var lang = _lang.ToLower();
+            var capLang = lang[0].ToString().ToUpper() + lang[1];
+            _langFileName = Path.Combine(_langFolder, $"localization-pack-{lang}", fileText.Replace("StringTableEn", $"StringTable{capLang}"));
 
-            var backFileName = Path.Combine("backup", "localization-pack-ru", Path.GetFileName(_ruFileName));
+            var backFileName = Path.Combine("backup", $"localization-pack-{lang}", Path.GetFileName(_langFileName));
             if (!File.Exists(backFileName))
             {
                 var backDir = Path.GetDirectoryName(backFileName);
                 if (!Directory.Exists(backDir))
                     Directory.CreateDirectory(backDir!);
 
-                File.Copy(_ruFileName, backFileName);
+                File.Copy(_langFileName, backFileName);
             }
 
 
             var enDoc = new XmlDocument();
             enDoc.Load(fileName);
 
-            _ruDoc = new XmlDocument();
-            _ruDoc.Load(_ruFileName);
+            _langDoc = new XmlDocument();
+            _langDoc.Load(_langFileName);
 
-            if (enDoc.DocumentElement != null && _ruDoc.DocumentElement != null)
+            if (enDoc.DocumentElement != null && _langDoc.DocumentElement != null)
             {
                 var localizedStrings = enDoc.DocumentElement.GetElementsByTagName("LocalizedStrings")[0]?.SelectNodes("GameDBLocalizedString");
                 if (localizedStrings == null)
@@ -86,7 +92,7 @@ namespace TranslateEditor
                 foreach (XmlElement ls in localizedStrings)
                 {
                     var locId = ls.SelectSingleNode("LocID")?.InnerText;
-                    var ruValue = _ruDoc.DocumentElement
+                    var langValue = _langDoc.DocumentElement
                         .SelectSingleNode($"//GameDBStringTable/LocalizedStrings/GameDBLocalizedString/LocID[text()='{locId}']")?
                         .ParentNode?
                         .SelectSingleNode("Text")?.InnerXml;
@@ -95,9 +101,9 @@ namespace TranslateEditor
 
                     gridLang.Rows[i].Cells[0].Value = locId;
                     gridLang.Rows[i].Cells[1].Value = enValue;
-                    gridLang.Rows[i].Cells[2].Value = ruValue;
+                    gridLang.Rows[i].Cells[2].Value = langValue;
 
-                    gridLang.Rows[i].Cells[2].Style.BackColor = enValue != ruValue && !string.IsNullOrEmpty(ruValue)
+                    gridLang.Rows[i].Cells[2].Style.BackColor = enValue != langValue && !string.IsNullOrEmpty(langValue)
                         ? Color.LightGreen
                         : Color.LightCoral;
 
@@ -109,7 +115,7 @@ namespace TranslateEditor
 
         private void gridLang_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            if (_ruDoc?.DocumentElement == null)
+            if (_langDoc?.DocumentElement == null)
                 return;
 
             if (e.ColumnIndex != 2)
@@ -117,7 +123,7 @@ namespace TranslateEditor
 
             var locId = gridLang.Rows[e.RowIndex].Cells[0].Value;
 
-            var ruNode = _ruDoc.DocumentElement
+            var ruNode = _langDoc.DocumentElement
                 .SelectSingleNode($"//GameDBStringTable/LocalizedStrings/GameDBLocalizedString/LocID[text()='{locId}']")?
                 .ParentNode?
                 .SelectSingleNode("Text");
@@ -133,7 +139,7 @@ namespace TranslateEditor
                 ? Color.LightGreen
                 : Color.LightCoral;
 
-            _ruDoc.Save(_ruFileName);
+            _langDoc.Save(_langFileName);
         }
 
         private int _searchRow;
@@ -176,6 +182,19 @@ namespace TranslateEditor
                 }
 
                 _searchRow = 0;
+            }
+        }
+
+        private void cbLang_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbLang.SelectedItem == null)
+                return;
+
+            _lang = cbLang.SelectedItem as string;
+
+            if (!string.IsNullOrEmpty(_langFileName))
+            {
+                cbFiles_SelectedIndexChanged(sender, e);
             }
         }
     }
