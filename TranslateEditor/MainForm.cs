@@ -191,11 +191,24 @@ namespace TranslateEditor
                 return;
 
             _lang = cbLang.SelectedItem as string;
+            SecondLang.HeaderText = _lang;
 
             if (!string.IsNullOrEmpty(_langFileName))
             {
                 cbFiles_SelectedIndexChanged(sender, e);
             }
+        }
+
+        private void searchAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (gridLang.SelectedCells.Count == 0)
+                return;
+
+            var selectedText = gridLang.SelectedCells[0].Value as string;
+
+            var searchForm = new SearchForm(_lang, _langFolder, selectedText);
+            searchForm.Owner = this;
+            searchForm.Show();
         }
     }
 }

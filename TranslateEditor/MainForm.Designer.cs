@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
@@ -44,9 +45,12 @@
             Key = new DataGridViewTextBoxColumn();
             FirstLang = new DataGridViewTextBoxColumn();
             SecondLang = new DataGridViewTextBoxColumn();
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            searchAllToolStripMenuItem = new ToolStripMenuItem();
             statusStrip.SuspendLayout();
             toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)gridLang).BeginInit();
+            contextMenuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // statusStrip
@@ -121,6 +125,7 @@
             gridLang.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             gridLang.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             gridLang.Columns.AddRange(new DataGridViewColumn[] { Key, FirstLang, SecondLang });
+            gridLang.ContextMenuStrip = contextMenuStrip1;
             gridLang.Dock = DockStyle.Fill;
             gridLang.Location = new Point(0, 25);
             gridLang.Name = "gridLang";
@@ -136,7 +141,7 @@
             Key.DefaultCellStyle = dataGridViewCellStyle1;
             Key.FillWeight = 200F;
             Key.Frozen = true;
-            Key.HeaderText = "KEY";
+            Key.HeaderText = "LocID";
             Key.Name = "Key";
             Key.Width = 200;
             // 
@@ -159,6 +164,19 @@
             SecondLang.Name = "SecondLang";
             SecondLang.Width = 500;
             // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { searchAllToolStripMenuItem });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(181, 48);
+            // 
+            // searchAllToolStripMenuItem
+            // 
+            searchAllToolStripMenuItem.Name = "searchAllToolStripMenuItem";
+            searchAllToolStripMenuItem.Size = new Size(180, 22);
+            searchAllToolStripMenuItem.Text = "Search all";
+            searchAllToolStripMenuItem.Click += searchAllToolStripMenuItem_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -174,6 +192,7 @@
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)gridLang).EndInit();
+            contextMenuStrip1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -193,5 +212,7 @@
         private ToolStripLabel toolStripLabel2;
         private ToolStripComboBox cbLang;
         private ToolStripLabel toolStripLabel3;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripMenuItem searchAllToolStripMenuItem;
     }
 }
