@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
@@ -39,8 +40,12 @@
             cbLang = new ToolStripComboBox();
             toolStripLabel3 = new ToolStripLabel();
             cbFiles = new ToolStripComboBox();
+            toolStripSeparator1 = new ToolStripSeparator();
             toolStripLabel1 = new ToolStripLabel();
             tbSearch = new ToolStripTextBox();
+            btnSearch = new ToolStripButton();
+            toolStripSeparator2 = new ToolStripSeparator();
+            btnSearchAll = new ToolStripButton();
             gridLang = new DataGridView();
             Key = new DataGridViewTextBoxColumn();
             FirstLang = new DataGridViewTextBoxColumn();
@@ -70,7 +75,7 @@
             // 
             // toolStrip1
             // 
-            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripLabel2, cbLang, toolStripLabel3, cbFiles, toolStripLabel1, tbSearch });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripLabel2, cbLang, toolStripLabel3, cbFiles, toolStripSeparator1, toolStripLabel1, tbSearch, btnSearch, toolStripSeparator2, btnSearchAll });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(1287, 25);
@@ -106,6 +111,11 @@
             cbFiles.SelectedIndexChanged += cbFiles_SelectedIndexChanged;
             cbFiles.SelectedChanged += cbFiles_SelectedChanged;
             // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(6, 25);
+            // 
             // toolStripLabel1
             // 
             toolStripLabel1.Name = "toolStripLabel1";
@@ -118,6 +128,33 @@
             tbSearch.Size = new Size(200, 25);
             tbSearch.KeyPress += tbSearch_KeyPress;
             // 
+            // btnSearch
+            // 
+            btnSearch.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnSearch.Image = (Image)resources.GetObject("btnSearch.Image");
+            btnSearch.ImageTransparentColor = Color.Magenta;
+            btnSearch.Name = "btnSearch";
+            btnSearch.Size = new Size(46, 22);
+            btnSearch.Text = "Search";
+            btnSearch.ToolTipText = "Search in current file";
+            btnSearch.Click += btnSearch_Click;
+            // 
+            // toolStripSeparator2
+            // 
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(6, 25);
+            // 
+            // btnSearchAll
+            // 
+            btnSearchAll.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnSearchAll.Image = (Image)resources.GetObject("btnSearchAll.Image");
+            btnSearchAll.ImageTransparentColor = Color.Magenta;
+            btnSearchAll.Name = "btnSearchAll";
+            btnSearchAll.Size = new Size(61, 22);
+            btnSearchAll.Text = "Search all";
+            btnSearchAll.ToolTipText = "Search in all files [Ctrl+Shift+F]";
+            btnSearchAll.Click += btnSearchAll_Click;
+            // 
             // gridLang
             // 
             gridLang.AllowUserToAddRows = false;
@@ -128,6 +165,7 @@
             gridLang.ContextMenuStrip = contextMenuStrip1;
             gridLang.Dock = DockStyle.Fill;
             gridLang.Location = new Point(0, 25);
+            gridLang.MultiSelect = false;
             gridLang.Name = "gridLang";
             gridLang.RowHeadersVisible = false;
             gridLang.Size = new Size(1287, 768);
@@ -168,12 +206,13 @@
             // 
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { searchAllToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(181, 48);
+            contextMenuStrip1.Size = new Size(197, 26);
             // 
             // searchAllToolStripMenuItem
             // 
             searchAllToolStripMenuItem.Name = "searchAllToolStripMenuItem";
-            searchAllToolStripMenuItem.Size = new Size(180, 22);
+            searchAllToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.F;
+            searchAllToolStripMenuItem.Size = new Size(196, 22);
             searchAllToolStripMenuItem.Text = "Search all";
             searchAllToolStripMenuItem.Click += searchAllToolStripMenuItem_Click;
             // 
@@ -214,5 +253,9 @@
         private ToolStripLabel toolStripLabel3;
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem searchAllToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripButton btnSearch;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripButton btnSearchAll;
     }
 }

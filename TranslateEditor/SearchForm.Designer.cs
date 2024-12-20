@@ -29,19 +29,19 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchForm));
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             toolStrip1 = new ToolStrip();
             tbSearch = new ToolStripTextBox();
             btnSearch = new ToolStripButton();
             gridLang = new DataGridView();
+            statusStrip1 = new StatusStrip();
+            lbSearchCount = new ToolStripStatusLabel();
             FileName = new DataGridViewTextBoxColumn();
             Key = new DataGridViewTextBoxColumn();
             FirstLang = new DataGridViewTextBoxColumn();
             SecondLang = new DataGridViewTextBoxColumn();
-            statusStrip1 = new StatusStrip();
-            lbSearchCount = new ToolStripStatusLabel();
             toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)gridLang).BeginInit();
             statusStrip1.SuspendLayout();
@@ -60,6 +60,7 @@
             // 
             tbSearch.Name = "tbSearch";
             tbSearch.Size = new Size(250, 25);
+            tbSearch.KeyPress += tbSearch_KeyPress;
             // 
             // btnSearch
             // 
@@ -84,44 +85,7 @@
             gridLang.RowHeadersVisible = false;
             gridLang.Size = new Size(1384, 736);
             gridLang.TabIndex = 3;
-            // 
-            // FileName
-            // 
-            FileName.Frozen = true;
-            FileName.HeaderText = "FILE";
-            FileName.Name = "FileName";
-            FileName.ReadOnly = true;
-            FileName.Width = 150;
-            // 
-            // Key
-            // 
-            dataGridViewCellStyle4.BackColor = Color.FromArgb(224, 224, 224);
-            dataGridViewCellStyle4.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            Key.DefaultCellStyle = dataGridViewCellStyle4;
-            Key.FillWeight = 200F;
-            Key.Frozen = true;
-            Key.HeaderText = "LocID";
-            Key.Name = "Key";
-            Key.Width = 200;
-            // 
-            // FirstLang
-            // 
-            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.True;
-            FirstLang.DefaultCellStyle = dataGridViewCellStyle5;
-            FirstLang.FillWeight = 500F;
-            FirstLang.Frozen = true;
-            FirstLang.HeaderText = "EN";
-            FirstLang.Name = "FirstLang";
-            FirstLang.Width = 500;
-            // 
-            // SecondLang
-            // 
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
-            SecondLang.DefaultCellStyle = dataGridViewCellStyle6;
-            SecondLang.FillWeight = 500F;
-            SecondLang.HeaderText = "RU";
-            SecondLang.Name = "SecondLang";
-            SecondLang.Width = 500;
+            gridLang.CellDoubleClick += gridLang_CellDoubleClick;
             // 
             // statusStrip1
             // 
@@ -137,6 +101,44 @@
             lbSearchCount.Name = "lbSearchCount";
             lbSearchCount.Size = new Size(82, 17);
             lbSearchCount.Text = "Search count: ";
+            // 
+            // FileName
+            // 
+            FileName.Frozen = true;
+            FileName.HeaderText = "FILE";
+            FileName.Name = "FileName";
+            FileName.ReadOnly = true;
+            FileName.Width = 250;
+            // 
+            // Key
+            // 
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(224, 224, 224);
+            dataGridViewCellStyle1.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            Key.DefaultCellStyle = dataGridViewCellStyle1;
+            Key.FillWeight = 200F;
+            Key.Frozen = true;
+            Key.HeaderText = "LocID";
+            Key.Name = "Key";
+            Key.Width = 200;
+            // 
+            // FirstLang
+            // 
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            FirstLang.DefaultCellStyle = dataGridViewCellStyle2;
+            FirstLang.FillWeight = 500F;
+            FirstLang.Frozen = true;
+            FirstLang.HeaderText = "EN";
+            FirstLang.Name = "FirstLang";
+            FirstLang.Width = 450;
+            // 
+            // SecondLang
+            // 
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            SecondLang.DefaultCellStyle = dataGridViewCellStyle3;
+            SecondLang.FillWeight = 500F;
+            SecondLang.HeaderText = "RU";
+            SecondLang.Name = "SecondLang";
+            SecondLang.Width = 450;
             // 
             // SearchForm
             // 
@@ -162,12 +164,12 @@
         private ToolStrip toolStrip1;
         private ToolStripButton btnSearch;
         private DataGridView gridLang;
+        public ToolStripTextBox tbSearch;
+        private StatusStrip statusStrip1;
+        private ToolStripStatusLabel lbSearchCount;
         private DataGridViewTextBoxColumn FileName;
         private DataGridViewTextBoxColumn Key;
         private DataGridViewTextBoxColumn FirstLang;
         private DataGridViewTextBoxColumn SecondLang;
-        public ToolStripTextBox tbSearch;
-        private StatusStrip statusStrip1;
-        private ToolStripStatusLabel lbSearchCount;
     }
 }

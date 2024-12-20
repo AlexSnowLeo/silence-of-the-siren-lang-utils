@@ -103,7 +103,7 @@ namespace TranslateEditor
                     gridLang.Rows[i].Cells[1].Value = enValue;
                     gridLang.Rows[i].Cells[2].Value = langValue;
 
-                    gridLang.Rows[i].Cells[2].Style.BackColor = enValue != langValue && !string.IsNullOrEmpty(langValue)
+                    gridLang.Rows[i].Cells[2].Style.BackColor = enValue?.Trim() != langValue?.Trim() && !string.IsNullOrWhiteSpace(langValue)
                         ? Color.LightGreen
                         : Color.LightCoral;
 
@@ -153,7 +153,7 @@ namespace TranslateEditor
             {
                 for (int i = _searchRow + 1; i < gridLang.RowCount; i++)
                 {
-                    if (gridLang.Rows[i].Cells[0].Value.ToString().Contains(search, StringComparison.InvariantCultureIgnoreCase))
+                    if (gridLang.Rows[i].Cells[0].Value?.ToString()?.Contains(search, StringComparison.InvariantCultureIgnoreCase) ?? false)
                     {
                         gridLang.Rows[i].Cells[0].Selected = true;
                         _searchRow = i;
@@ -162,7 +162,7 @@ namespace TranslateEditor
                         return;
                     }
 
-                    if (gridLang.Rows[i].Cells[1].Value.ToString().Contains(search, StringComparison.InvariantCultureIgnoreCase))
+                    if (gridLang.Rows[i].Cells[1].Value?.ToString()?.Contains(search, StringComparison.InvariantCultureIgnoreCase) ?? false)
                     {
                         gridLang.Rows[i].Cells[1].Selected = true;
                         _searchRow = i;
@@ -171,7 +171,7 @@ namespace TranslateEditor
                         return;
                     }
 
-                    if (gridLang.Rows[i].Cells[2].Value.ToString().Contains(search, StringComparison.InvariantCultureIgnoreCase))
+                    if (gridLang.Rows[i].Cells[2].Value?.ToString()?.Contains(search, StringComparison.InvariantCultureIgnoreCase) ?? false)
                     {
                         gridLang.Rows[i].Cells[2].Selected = true;
                         _searchRow = i;
@@ -206,9 +206,52 @@ namespace TranslateEditor
 
             var selectedText = gridLang.SelectedCells[0].Value as string;
 
-            var searchForm = new SearchForm(_lang, _langFolder, selectedText);
+            SearchAll(selectedText);
+        }
+
+        private void SearchAll(string? search)
+        {
+            if (string.IsNullOrEmpty(search))
+                return;
+
+            var searchForm = new SearchForm(_lang, _langFolder, search);
+            searchForm.OnDoubleClickFile += SearchForm_OnDoubleClickFile;
+
             searchForm.Owner = this;
             searchForm.Show();
+        }
+
+        private void SearchForm_OnDoubleClickFile(object? sender, SearchForm.DoubleClickFileEventArgs e)
+        {
+            var fileIndex = cbFiles.Items.IndexOf(e.File);
+
+            if (fileIndex != -1)
+            {
+                cbFiles.SelectedIndex = fileIndex;
+                if (e.LocID != null)
+                {
+                    for (int i = 0; i < gridLang.RowCount; i++)
+                    {
+                        if (gridLang.Rows[i].Cells[0].Value?.ToString() == e.LocID)
+                        {
+                            gridLang.Rows[i].Selected = true;
+                            gridLang.FirstDisplayedScrollingRowIndex = i;
+
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            tbSearch_KeyPress(tbSearch, new KeyPressEventArgs((char)13));
+        }
+
+        private void btnSearchAll_Click(object sender, EventArgs e)
+        {
+            SearchAll(tbSearch.Text);
         }
     }
 }

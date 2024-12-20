@@ -7,6 +7,14 @@ namespace TranslateEditor
         private string _lang;
         private string _langFolder;
 
+        public class DoubleClickFileEventArgs(string file, string? locID) : EventArgs
+        {
+            public string File { get; } = file;
+            public string? LocID { get; } = locID;
+        }
+
+        public event EventHandler<DoubleClickFileEventArgs>? OnDoubleClickFile;
+
         public SearchForm(string lang, string langFolder, string searchText)
         {
             _lang = lang;
@@ -73,15 +81,10 @@ namespace TranslateEditor
                         var enValue = ls.SelectSingleNode("Text")?.InnerXml;
 
                         if (locId != null && locId.Contains(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) ||
-                            enValue != null && enValue.Contains(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase))
+                            enValue != null && enValue.Contains(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) ||
+                            (langValue != enValue && (langValue?.Contains(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) ?? false)))
                         {
-                            var fileName = Path.GetFileNameWithoutExtension(file);
-                            searchItems.Add(new SearchItem(fileName, locId, enValue, langValue));
-                        }
-
-                        if (langValue != enValue && (langValue?.Contains(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) ?? false))
-                        {
-                            var fileName = Path.GetFileNameWithoutExtension(langFile);
+                            var fileName = Path.GetFileName(file);
                             searchItems.Add(new SearchItem(fileName, locId, enValue, langValue));
                         }
                     }
@@ -98,7 +101,31 @@ namespace TranslateEditor
                 gridLang.Rows[i].Cells[2].Value = item.EnValue;
                 gridLang.Rows[i].Cells[3].Value = item.LangValue;
 
+                if (item.EnValue?.Trim() == item.LangValue?.Trim() && !string.IsNullOrWhiteSpace(item.LangValue))
+                    gridLang.Rows[i].Cells[3].Style.BackColor = Color.LightCoral;
+
                 i++;
+            }
+        }
+
+        private void gridLang_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex != 0)
+                return;
+
+            var file = gridLang.Rows[e.RowIndex].Cells[0].Value as string;
+            var locID = gridLang.Rows[e.RowIndex].Cells[1].Value as string;
+            if (string.IsNullOrEmpty(file))
+                return;
+
+            OnDoubleClickFile?.Invoke(this, new DoubleClickFileEventArgs(file, locID));
+        }
+
+        private void tbSearch_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                btnSearch_Click(sender, e);
             }
         }
     }
