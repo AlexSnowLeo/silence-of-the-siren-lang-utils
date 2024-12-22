@@ -50,7 +50,6 @@ namespace TranslateEditor
 
         private XmlDocument _langDoc;
         private string _langFileName;
-        private int _updated;
         private void cbFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
             var fileText = cbFiles.SelectedItem as string;
@@ -89,7 +88,6 @@ namespace TranslateEditor
                 gridLang.RowCount = localizedStrings.Count;
 
                 var i = 0;
-                _updated = 0;
                 foreach (XmlElement ls in localizedStrings)
                 {
                     var locId = ls.SelectSingleNode("LocID")?.InnerText;
@@ -105,9 +103,6 @@ namespace TranslateEditor
                     gridLang.Rows[i].Cells[2].Value = langValue;
 
                     var isUpdated = enValue?.Trim() != langValue?.Trim() && !string.IsNullOrWhiteSpace(langValue);
-                    if (isUpdated)
-                        _updated++;
-
                     gridLang.Rows[i].Cells[2].Style.BackColor = isUpdated
                         ? Color.LightGreen
                         : Color.LightCoral;
@@ -115,8 +110,23 @@ namespace TranslateEditor
                     i++;
                 }
 
-                lblCount.Text = $"Count: {gridLang.RowCount}/{_updated}";
+                UpdateCount();
             }
+        }
+
+        private void UpdateCount()
+        {
+            var updated = 0;
+            foreach (DataGridViewRow row in gridLang.Rows)
+            {
+                var enValue = row.Cells[1].Value as string;
+                var langValue = row.Cells[2].Value as string;
+                var isUpdated = enValue?.Trim() != langValue?.Trim() && !string.IsNullOrWhiteSpace(langValue);
+                if (isUpdated)
+                    updated++;
+            }
+
+            lblCount.Text = $"Count: {gridLang.RowCount}/{updated}";
         }
 
         private void gridLang_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -142,16 +152,13 @@ namespace TranslateEditor
             langNode.InnerXml = langValue;
 
             var isUpdated = enValue?.Trim() != langValue?.Trim() && !string.IsNullOrWhiteSpace(langValue);
-            if (isUpdated)
-                _updated++;
-
             gridLang.Rows[e.RowIndex].Cells[2].Style.BackColor = isUpdated
                 ? Color.LightGreen
                 : Color.LightCoral;
 
             _langDoc.Save(_langFileName);
 
-            lblCount.Text = $"Count: {gridLang.RowCount}/{_updated}";
+            UpdateCount();
         }
 
         private int _searchRow;
