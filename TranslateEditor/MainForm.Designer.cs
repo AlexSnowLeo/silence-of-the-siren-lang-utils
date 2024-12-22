@@ -30,18 +30,17 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
             statusStrip = new StatusStrip();
-            toolStripStatusLabel1 = new ToolStripStatusLabel();
+            lblFolder = new ToolStripStatusLabel();
             toolStrip1 = new ToolStrip();
             toolStripLabel2 = new ToolStripLabel();
             cbLang = new ToolStripComboBox();
             toolStripLabel3 = new ToolStripLabel();
             cbFiles = new ToolStripComboBox();
             toolStripSeparator1 = new ToolStripSeparator();
-            toolStripLabel1 = new ToolStripLabel();
             tbSearch = new ToolStripTextBox();
             btnSearch = new ToolStripButton();
             toolStripSeparator2 = new ToolStripSeparator();
@@ -52,6 +51,8 @@
             SecondLang = new DataGridViewTextBoxColumn();
             contextMenuStrip1 = new ContextMenuStrip(components);
             searchAllToolStripMenuItem = new ToolStripMenuItem();
+            toolStripStatusLabel2 = new ToolStripStatusLabel();
+            lblCount = new ToolStripStatusLabel();
             statusStrip.SuspendLayout();
             toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)gridLang).BeginInit();
@@ -60,22 +61,22 @@
             // 
             // statusStrip
             // 
-            statusStrip.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel1 });
+            statusStrip.Items.AddRange(new ToolStripItem[] { lblFolder, toolStripStatusLabel2, lblCount });
             statusStrip.Location = new Point(0, 793);
             statusStrip.Name = "statusStrip";
             statusStrip.Size = new Size(1287, 22);
             statusStrip.TabIndex = 0;
             statusStrip.Text = "statusStrip1";
             // 
-            // toolStripStatusLabel1
+            // lblFolder
             // 
-            toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            toolStripStatusLabel1.Size = new Size(30, 17);
-            toolStripStatusLabel1.Text = "data";
+            lblFolder.Name = "lblFolder";
+            lblFolder.Size = new Size(30, 17);
+            lblFolder.Text = "data";
             // 
             // toolStrip1
             // 
-            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripLabel2, cbLang, toolStripLabel3, cbFiles, toolStripSeparator1, toolStripLabel1, tbSearch, btnSearch, toolStripSeparator2, btnSearchAll });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripLabel2, cbLang, toolStripLabel3, cbFiles, toolStripSeparator1, tbSearch, btnSearch, toolStripSeparator2, btnSearchAll });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(1287, 25);
@@ -115,12 +116,6 @@
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
             toolStripSeparator1.Size = new Size(6, 25);
-            // 
-            // toolStripLabel1
-            // 
-            toolStripLabel1.Name = "toolStripLabel1";
-            toolStripLabel1.Size = new Size(45, 22);
-            toolStripLabel1.Text = "Search:";
             // 
             // tbSearch
             // 
@@ -174,9 +169,9 @@
             // 
             // Key
             // 
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(224, 224, 224);
-            dataGridViewCellStyle1.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            Key.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.BackColor = Color.FromArgb(224, 224, 224);
+            dataGridViewCellStyle4.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            Key.DefaultCellStyle = dataGridViewCellStyle4;
             Key.FillWeight = 200F;
             Key.Frozen = true;
             Key.HeaderText = "LocID";
@@ -185,8 +180,8 @@
             // 
             // FirstLang
             // 
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            FirstLang.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.True;
+            FirstLang.DefaultCellStyle = dataGridViewCellStyle5;
             FirstLang.FillWeight = 500F;
             FirstLang.Frozen = true;
             FirstLang.HeaderText = "EN";
@@ -195,8 +190,8 @@
             // 
             // SecondLang
             // 
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-            SecondLang.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
+            SecondLang.DefaultCellStyle = dataGridViewCellStyle6;
             SecondLang.FillWeight = 500F;
             SecondLang.HeaderText = "RU";
             SecondLang.Name = "SecondLang";
@@ -215,6 +210,18 @@
             searchAllToolStripMenuItem.Size = new Size(196, 22);
             searchAllToolStripMenuItem.Text = "Search all";
             searchAllToolStripMenuItem.Click += searchAllToolStripMenuItem_Click;
+            // 
+            // toolStripStatusLabel2
+            // 
+            toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            toolStripStatusLabel2.Size = new Size(10, 17);
+            toolStripStatusLabel2.Text = "|";
+            // 
+            // lblCount
+            // 
+            lblCount.Name = "lblCount";
+            lblCount.Size = new Size(43, 17);
+            lblCount.Text = "Count:";
             // 
             // MainForm
             // 
@@ -242,11 +249,10 @@
         private ToolStrip toolStrip1;
         private DataGridView gridLang;
         private ToolStripComboBox cbFiles;
-        private ToolStripStatusLabel toolStripStatusLabel1;
+        private ToolStripStatusLabel lblFolder;
         private DataGridViewTextBoxColumn Key;
         private DataGridViewTextBoxColumn FirstLang;
         private DataGridViewTextBoxColumn SecondLang;
-        private ToolStripLabel toolStripLabel1;
         private ToolStripTextBox tbSearch;
         private ToolStripLabel toolStripLabel2;
         private ToolStripComboBox cbLang;
@@ -257,5 +263,7 @@
         private ToolStripButton btnSearch;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripButton btnSearchAll;
+        private ToolStripStatusLabel toolStripStatusLabel2;
+        private ToolStripStatusLabel lblCount;
     }
 }

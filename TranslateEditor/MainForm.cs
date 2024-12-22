@@ -22,7 +22,7 @@ namespace TranslateEditor
             cbLang.SelectedItem = _lang;
 
             _langFolder = config.GetSection("LangFolder").Value ?? "data";
-            toolStripStatusLabel1.Text = _langFolder;
+            lblFolder.Text = _langFolder;
 
             if (!Directory.Exists(_langFolder))
             {
@@ -34,6 +34,7 @@ namespace TranslateEditor
             }
 
             _files = Directory.GetFiles(Path.Combine(_langFolder, "localization-base-english"), "*.xml");
+            
 
             cbFiles.Items.Clear();
             foreach (var f in _files)
@@ -49,6 +50,7 @@ namespace TranslateEditor
 
         private XmlDocument _langDoc;
         private string _langFileName;
+        private int _updated;
         private void cbFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
             var fileText = cbFiles.SelectedItem as string;
@@ -84,11 +86,10 @@ namespace TranslateEditor
                 if (localizedStrings == null)
                     return;
 
-                //var localizedStrings = xDoc.DocumentElement.SelectNodes("GameDBLocalizedString");
-
                 gridLang.RowCount = localizedStrings.Count;
 
                 var i = 0;
+                _updated = 0;
                 foreach (XmlElement ls in localizedStrings)
                 {
                     var locId = ls.SelectSingleNode("LocID")?.InnerText;
@@ -103,13 +104,18 @@ namespace TranslateEditor
                     gridLang.Rows[i].Cells[1].Value = enValue;
                     gridLang.Rows[i].Cells[2].Value = langValue;
 
-                    gridLang.Rows[i].Cells[2].Style.BackColor = enValue?.Trim() != langValue?.Trim() && !string.IsNullOrWhiteSpace(langValue)
+                    var isUpdated = enValue?.Trim() != langValue?.Trim() && !string.IsNullOrWhiteSpace(langValue);
+                    if (isUpdated)
+                        _updated++;
+
+                    gridLang.Rows[i].Cells[2].Style.BackColor = isUpdated
                         ? Color.LightGreen
                         : Color.LightCoral;
 
                     i++;
                 }
 
+                lblCount.Text = $"Count: {gridLang.RowCount}/{_updated}";
             }
         }
 
@@ -135,11 +141,17 @@ namespace TranslateEditor
             var enValue = gridLang.Rows[e.RowIndex].Cells[1].Value as string ?? string.Empty;
             langNode.InnerXml = langValue;
 
-            gridLang.Rows[e.RowIndex].Cells[2].Style.BackColor = enValue != langValue && !string.IsNullOrEmpty(langValue)
+            var isUpdated = enValue?.Trim() != langValue?.Trim() && !string.IsNullOrWhiteSpace(langValue);
+            if (isUpdated)
+                _updated++;
+
+            gridLang.Rows[e.RowIndex].Cells[2].Style.BackColor = isUpdated
                 ? Color.LightGreen
                 : Color.LightCoral;
 
             _langDoc.Save(_langFileName);
+
+            lblCount.Text = $"Count: {gridLang.RowCount}/{_updated}";
         }
 
         private int _searchRow;
