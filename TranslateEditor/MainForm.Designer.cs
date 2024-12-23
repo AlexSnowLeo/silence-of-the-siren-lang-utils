@@ -30,11 +30,13 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             statusStrip = new StatusStrip();
             lblFolder = new ToolStripStatusLabel();
+            toolStripStatusLabel2 = new ToolStripStatusLabel();
+            lblCount = new ToolStripStatusLabel();
             toolStrip1 = new ToolStrip();
             toolStripLabel2 = new ToolStripLabel();
             cbLang = new ToolStripComboBox();
@@ -51,8 +53,6 @@
             SecondLang = new DataGridViewTextBoxColumn();
             contextMenuStrip1 = new ContextMenuStrip(components);
             searchAllToolStripMenuItem = new ToolStripMenuItem();
-            toolStripStatusLabel2 = new ToolStripStatusLabel();
-            lblCount = new ToolStripStatusLabel();
             statusStrip.SuspendLayout();
             toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)gridLang).BeginInit();
@@ -73,6 +73,18 @@
             lblFolder.Name = "lblFolder";
             lblFolder.Size = new Size(30, 17);
             lblFolder.Text = "data";
+            // 
+            // toolStripStatusLabel2
+            // 
+            toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            toolStripStatusLabel2.Size = new Size(10, 17);
+            toolStripStatusLabel2.Text = "|";
+            // 
+            // lblCount
+            // 
+            lblCount.Name = "lblCount";
+            lblCount.Size = new Size(43, 17);
+            lblCount.Text = "Count:";
             // 
             // toolStrip1
             // 
@@ -110,7 +122,6 @@
             cbFiles.Name = "cbFiles";
             cbFiles.Size = new Size(250, 25);
             cbFiles.SelectedIndexChanged += cbFiles_SelectedIndexChanged;
-            cbFiles.SelectedChanged += cbFiles_SelectedChanged;
             // 
             // toolStripSeparator1
             // 
@@ -169,9 +180,9 @@
             // 
             // Key
             // 
-            dataGridViewCellStyle4.BackColor = Color.FromArgb(224, 224, 224);
-            dataGridViewCellStyle4.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            Key.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(224, 224, 224);
+            dataGridViewCellStyle1.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            Key.DefaultCellStyle = dataGridViewCellStyle1;
             Key.FillWeight = 200F;
             Key.Frozen = true;
             Key.HeaderText = "LocID";
@@ -180,8 +191,8 @@
             // 
             // FirstLang
             // 
-            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.True;
-            FirstLang.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            FirstLang.DefaultCellStyle = dataGridViewCellStyle2;
             FirstLang.FillWeight = 500F;
             FirstLang.Frozen = true;
             FirstLang.HeaderText = "EN";
@@ -190,8 +201,8 @@
             // 
             // SecondLang
             // 
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
-            SecondLang.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            SecondLang.DefaultCellStyle = dataGridViewCellStyle3;
             SecondLang.FillWeight = 500F;
             SecondLang.HeaderText = "RU";
             SecondLang.Name = "SecondLang";
@@ -210,18 +221,6 @@
             searchAllToolStripMenuItem.Size = new Size(196, 22);
             searchAllToolStripMenuItem.Text = "Search all";
             searchAllToolStripMenuItem.Click += searchAllToolStripMenuItem_Click;
-            // 
-            // toolStripStatusLabel2
-            // 
-            toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            toolStripStatusLabel2.Size = new Size(10, 17);
-            toolStripStatusLabel2.Text = "|";
-            // 
-            // lblCount
-            // 
-            lblCount.Name = "lblCount";
-            lblCount.Size = new Size(43, 17);
-            lblCount.Text = "Count:";
             // 
             // MainForm
             // 

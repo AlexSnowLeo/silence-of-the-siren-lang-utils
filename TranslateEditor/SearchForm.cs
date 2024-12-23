@@ -22,6 +22,8 @@ namespace TranslateEditor
 
             InitializeComponent();
 
+            SecondLang.HeaderText = lang;
+
             tbSearch.Text = searchText;
             btnSearch_Click(this, new EventArgs());
         }
@@ -48,6 +50,7 @@ namespace TranslateEditor
                 return;
 
             var files = Directory.GetFiles(Path.Combine(_langFolder, "localization-base-english"), "*.xml");
+            const string langFileNotExists = "[LANG FILE NOT EXISTS]";
 
             var searchItems = new List<SearchItem>();
             foreach (var file in files)
@@ -62,9 +65,11 @@ namespace TranslateEditor
                 enDoc.Load(file);
 
                 var langDoc = new XmlDocument();
-                langDoc.Load(langFile);
+                var isLangFileExists = File.Exists(langFile);
+                if (isLangFileExists)
+                    langDoc.Load(langFile);
 
-                if (enDoc.DocumentElement != null && langDoc.DocumentElement != null)
+                if (enDoc.DocumentElement != null)
                 {
                     var localizedStrings = enDoc.DocumentElement.GetElementsByTagName("LocalizedStrings")[0]?.SelectNodes("GameDBLocalizedString");
                     if (localizedStrings == null)
@@ -73,10 +78,12 @@ namespace TranslateEditor
                     foreach (XmlElement ls in localizedStrings)
                     {
                         var locId = ls.SelectSingleNode("LocID")?.InnerText;
-                        var langValue = langDoc.DocumentElement
-                            .SelectSingleNode($"//GameDBStringTable/LocalizedStrings/GameDBLocalizedString/LocID[text()='{locId}']")?
-                            .ParentNode?
-                            .SelectSingleNode("Text")?.InnerXml;
+                        var langValue = !isLangFileExists
+                            ? langFileNotExists
+                            : langDoc.DocumentElement?
+                                .SelectSingleNode($"//GameDBStringTable/LocalizedStrings/GameDBLocalizedString/LocID[text()='{locId}']")?
+                                .ParentNode?
+                                .SelectSingleNode("Text")?.InnerXml;
 
                         var enValue = ls.SelectSingleNode("Text")?.InnerXml;
 
@@ -103,6 +110,9 @@ namespace TranslateEditor
 
                 if (item.EnValue?.Trim() == item.LangValue?.Trim() && !string.IsNullOrWhiteSpace(item.LangValue))
                     gridLang.Rows[i].Cells[3].Style.BackColor = Color.LightCoral;
+
+                gridLang.Rows[i].Cells[3].Style.ForeColor = item.LangValue == langFileNotExists
+                    ? Color.Red : Color.Black;
 
                 i++;
             }

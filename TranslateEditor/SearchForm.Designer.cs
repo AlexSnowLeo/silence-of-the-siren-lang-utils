@@ -105,7 +105,7 @@
             // FileName
             // 
             FileName.Frozen = true;
-            FileName.HeaderText = "FILE";
+            FileName.HeaderText = "BASE FILE";
             FileName.Name = "FileName";
             FileName.ReadOnly = true;
             FileName.Width = 250;

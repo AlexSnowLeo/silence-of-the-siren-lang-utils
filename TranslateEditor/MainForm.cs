@@ -18,9 +18,6 @@ namespace TranslateEditor
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
-            _lang = config.GetSection("Lang").Value ?? "RU";
-            cbLang.SelectedItem = _lang;
-
             _langFolder = config.GetSection("LangFolder").Value ?? "data";
             lblFolder.Text = _langFolder;
 
@@ -33,19 +30,8 @@ namespace TranslateEditor
                 return;
             }
 
-            _files = Directory.GetFiles(Path.Combine(_langFolder, "localization-base-english"), "*.xml");
-            
-
-            cbFiles.Items.Clear();
-            foreach (var f in _files)
-            {
-                cbFiles.Items.Add(Path.GetFileName(f));
-            }
-        }
-
-        private void cbFiles_SelectedChanged(object sender, EventArgs e)
-        {
-
+            _lang = config.GetSection("Lang").Value ?? "RU";
+            cbLang.SelectedItem = _lang;
         }
 
         private XmlDocument _langDoc;
@@ -56,11 +42,11 @@ namespace TranslateEditor
             if (string.IsNullOrEmpty(fileText))
                 return;
 
-            var fileName = Path.Combine(_langFolder, "localization-base-english", fileText);
-
             var lang = _lang.ToLower();
+            _langFileName = Path.Combine(_langFolder, $"localization-pack-{lang}", fileText);
+
             var capLang = lang[0].ToString().ToUpper() + lang[1];
-            _langFileName = Path.Combine(_langFolder, $"localization-pack-{lang}", fileText.Replace("StringTableEn", $"StringTable{capLang}"));
+            var fileName = Path.Combine(_langFolder, $"localization-base-english", fileText.Replace($"StringTable{capLang}", "StringTableEn"));
 
             var backFileName = Path.Combine("backup", $"localization-pack-{lang}", Path.GetFileName(_langFileName));
             if (!File.Exists(backFileName))
@@ -72,6 +58,11 @@ namespace TranslateEditor
                 File.Copy(_langFileName, backFileName);
             }
 
+            if (!File.Exists(fileName))
+            {
+                MessageBox.Show($"File not found: '{fileName}'");
+                return;
+            }
 
             var enDoc = new XmlDocument();
             enDoc.Load(fileName);
@@ -209,12 +200,34 @@ namespace TranslateEditor
             if (cbLang.SelectedItem == null)
                 return;
 
-            _lang = cbLang.SelectedItem as string;
+            var lang = cbLang.SelectedItem as string;
+            if (string.IsNullOrEmpty(lang))
+                return;
+
+            var prevCapLang = _lang[0] + _lang[1].ToString().ToLower();
+            _lang = lang;
             SecondLang.HeaderText = _lang;
 
-            if (!string.IsNullOrEmpty(_langFileName))
+            lang = _lang.ToLower();
+            _files = Directory.GetFiles(Path.Combine(_langFolder, $"localization-pack-{lang}"), "*.xml");
+
+            cbFiles.Items.Clear();
+            foreach (var f in _files)
             {
-                cbFiles_SelectedIndexChanged(sender, e);
+                var fileName = Path.GetFileName(f);
+                if (fileName.StartsWith("Language"))
+                    continue;
+
+                cbFiles.Items.Add(Path.GetFileName(f));
+            }
+
+            if (!string.IsNullOrEmpty(cbFiles.Text))
+            {
+                var capLang = lang[0].ToString().ToUpper() + lang[1];
+                var langFileName = cbFiles.Text.Replace($"StringTable{prevCapLang}", $"StringTable{capLang}");
+                var idx = cbFiles.Items.IndexOf(langFileName);
+                if (idx != -1)
+                    cbFiles.SelectedIndex = idx;
             }
         }
 
@@ -242,7 +255,8 @@ namespace TranslateEditor
 
         private void SearchForm_OnDoubleClickFile(object? sender, SearchForm.DoubleClickFileEventArgs e)
         {
-            var fileIndex = cbFiles.Items.IndexOf(e.File);
+            var capLang = _lang[0] + _lang[1].ToString().ToLower();
+            var fileIndex = cbFiles.Items.IndexOf(e.File.Replace("StringTableEn", $"StringTable{capLang}"));
 
             if (fileIndex != -1)
             {
