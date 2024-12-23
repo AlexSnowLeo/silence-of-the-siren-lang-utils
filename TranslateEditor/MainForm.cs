@@ -72,6 +72,9 @@ namespace TranslateEditor
 
             if (enDoc.DocumentElement != null && _langDoc.DocumentElement != null)
             {
+                var contributor = _langDoc.DocumentElement.SelectSingleNode("//GameDBStringTable/Contributors/Name")?.InnerXml;
+                tbContributor.Text = contributor;
+
                 var localizedStrings = enDoc.DocumentElement.GetElementsByTagName("LocalizedStrings")[0]?.SelectNodes("GameDBLocalizedString");
                 if (localizedStrings == null)
                     return;
@@ -285,6 +288,17 @@ namespace TranslateEditor
         private void btnSearchAll_Click(object sender, EventArgs e)
         {
             SearchAll(tbSearch.Text);
+        }
+
+        private void tbContributor_TextChanged(object sender, EventArgs e)
+        {
+            var contributor = _langDoc.DocumentElement?.SelectSingleNode("//GameDBStringTable/Contributors/Name");
+
+            if (contributor != null && contributor.InnerXml != tbContributor.Text)
+            {
+                contributor.InnerXml = tbContributor.Text;
+                _langDoc.Save(_langFileName);
+            }
         }
     }
 }
