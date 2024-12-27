@@ -51,6 +51,7 @@ namespace TranslateEditor
 
             var files = Directory.GetFiles(Path.Combine(_langFolder, "localization-base-english"), "*.xml");
             const string langFileNotExists = "[LANG FILE NOT EXISTS]";
+            const string nodeNotExists = "[NODE NOT EXISTS IN LANG FILE]";
 
             var searchItems = new List<SearchItem>();
             foreach (var file in files)
@@ -78,21 +79,43 @@ namespace TranslateEditor
                     foreach (XmlElement ls in localizedStrings)
                     {
                         var locId = ls.SelectSingleNode("LocID")?.InnerText;
-                        var langValue = !isLangFileExists
-                            ? langFileNotExists
-                            : langDoc.DocumentElement?
-                                .SelectSingleNode($"//GameDBStringTable/LocalizedStrings/GameDBLocalizedString/LocID[text()='{locId}']")?
-                                .ParentNode?
-                                .SelectSingleNode("Text")?.InnerXml;
+                        var langValues = new List<string>();
+                        if (isLangFileExists)
+                        {
+                            var langNodes = langDoc.DocumentElement?
+                                .SelectNodes($"//GameDBStringTable/LocalizedStrings/GameDBLocalizedString/LocID[text()='{locId}']");
+
+                            if (langNodes != null && langNodes.Count > 0)
+                            {
+                                foreach (XmlNode langNode in langNodes)
+                                {
+                                    var langValue = langNode.ParentNode?
+                                        .SelectSingleNode("Text")?.InnerXml;
+                                    if (langValue != null)
+                                        langValues.Add(langValue);
+                                }
+                            } 
+                            else
+                            {
+                                langValues.Add(nodeNotExists);
+                            }
+                        } 
+                        else
+                        {
+                            langValues.Add(langFileNotExists);
+                        }
 
                         var enValue = ls.SelectSingleNode("Text")?.InnerXml;
 
-                        if (locId != null && locId.Contains(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) ||
+                        foreach (var langValue in langValues)
+                        {
+                            if (locId != null && locId.Contains(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) ||
                             enValue != null && enValue.Contains(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) ||
                             (langValue != enValue && (langValue?.Contains(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) ?? false)))
-                        {
-                            var fileName = Path.GetFileName(file);
-                            searchItems.Add(new SearchItem(fileName, locId, enValue, langValue));
+                            {
+                                var fileName = Path.GetFileName(file);
+                                searchItems.Add(new SearchItem(fileName, locId, enValue, langValue));
+                            }
                         }
                     }
                 }
@@ -111,7 +134,7 @@ namespace TranslateEditor
                 if (item.EnValue?.Trim() == item.LangValue?.Trim() && !string.IsNullOrWhiteSpace(item.LangValue))
                     gridLang.Rows[i].Cells[3].Style.BackColor = Color.LightCoral;
 
-                gridLang.Rows[i].Cells[3].Style.ForeColor = item.LangValue == langFileNotExists
+                gridLang.Rows[i].Cells[3].Style.ForeColor = item.LangValue is langFileNotExists or nodeNotExists
                     ? Color.Red : Color.Black;
 
                 i++;
