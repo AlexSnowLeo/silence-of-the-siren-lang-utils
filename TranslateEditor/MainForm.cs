@@ -30,6 +30,9 @@ namespace TranslateEditor
                 return;
             }
 
+            var languages = config.GetSection("Languages").Value ?? "DE,HU,RU,UK";
+            cbLang.Items.AddRange(languages.Split(','));
+
             _lang = config.GetSection("Lang").Value ?? "RU";
             cbLang.SelectedItem = _lang;
         }
@@ -45,7 +48,9 @@ namespace TranslateEditor
             var lang = _lang.ToLower();
             _langFileName = Path.Combine(_langFolder, $"localization-pack-{lang}", fileText);
 
-            var capLang = lang[0].ToString().ToUpper() + lang[1];
+            var capLang = lang.Length == 2
+                ? lang[0].ToString().ToUpper() + lang[1]
+                : lang[0].ToString().ToUpper() + lang[1] + lang[2].ToString().ToUpper() + lang[3];
             var fileName = Path.Combine(_langFolder, $"localization-base-english", fileText.Replace($"StringTable{capLang}", "StringTableEn"));
 
             var backFileName = Path.Combine("backup", $"localization-pack-{lang}", Path.GetFileName(_langFileName));
@@ -207,7 +212,10 @@ namespace TranslateEditor
             if (string.IsNullOrEmpty(lang))
                 return;
 
-            var prevCapLang = _lang[0] + _lang[1].ToString().ToLower();
+            var prevCapLang = _lang.Length == 2 
+                ? _lang[0] + _lang[1].ToString().ToLower()
+                : _lang[0] + _lang[1].ToString().ToLower() + _lang[2] + _lang[3].ToString().ToLower();
+
             _lang = lang;
             SecondLang.HeaderText = _lang;
 
@@ -226,7 +234,10 @@ namespace TranslateEditor
 
             if (!string.IsNullOrEmpty(cbFiles.Text))
             {
-                var capLang = lang[0].ToString().ToUpper() + lang[1];
+                var capLang = _lang.Length == 2
+                    ? _lang[0] + _lang[1].ToString().ToLower()
+                    : _lang[0] + _lang[1].ToString().ToLower() + _lang[2] + _lang[3].ToString().ToLower();
+
                 var langFileName = cbFiles.Text.Replace($"StringTable{prevCapLang}", $"StringTable{capLang}");
                 var idx = cbFiles.Items.IndexOf(langFileName);
                 if (idx != -1)
